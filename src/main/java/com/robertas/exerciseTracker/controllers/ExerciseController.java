@@ -1,6 +1,7 @@
 package com.robertas.exerciseTracker.controllers;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.robertas.exerciseTracker.models.Exercise;
 import com.robertas.exerciseTracker.payloads.requests.ExerciseCreateRequest;
 import com.robertas.exerciseTracker.payloads.requests.ExerciseUpdateNameRequest;
+import com.robertas.exerciseTracker.payloads.responses.MessageResponse;
 import com.robertas.exerciseTracker.services.ExerciseService;
 
 @RequestMapping("/exercises")
@@ -31,26 +33,53 @@ public class ExerciseController {
         return ResponseEntity.ok(exerciseService.getExercises());
     }
 
-    @GetMapping("/{userId}")
-    public ResponseEntity<List<Exercise>> getExercisesByUserId(@PathVariable Integer userId) {
-        return ResponseEntity.ok(exerciseService.getExercisesByUserId(userId));
+    @GetMapping("/{id}")
+    public ResponseEntity<Exercise> getExerciseById(@PathVariable Integer id) {
+        if (id == null) {
+            return ResponseEntity.badRequest().build();
+        }
+        Optional<Exercise> exercise = exerciseService.getExerciseById(id);
+        if (exercise.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(exercise.get());
+    }
+
+    @GetMapping("/mine")
+    public ResponseEntity<List<Exercise>> getMyExercises() {
+        return ResponseEntity.ok(exerciseService.getExercisesByUserId());
     }
 
     @PostMapping("/create")
-    public ResponseEntity<Exercise> create(@RequestBody ExerciseCreateRequest exerciseCreateRequest) {
+    public ResponseEntity<Exercise> createExercise(@RequestBody ExerciseCreateRequest exerciseCreateRequest) {
+        if (exerciseCreateRequest.getName() == null) {
+            return ResponseEntity.badRequest().build();
+        }
         return ResponseEntity.ok(exerciseService.createExercise(exerciseCreateRequest));
     }
 
     @PutMapping("update/{id}")
-    public ResponseEntity<Exercise> updateExerciseName(@PathVariable Integer id,
+    public ResponseEntity<Exercise> updateExercise(@PathVariable Integer id,
             @RequestBody ExerciseUpdateNameRequest exerciseUpdateNameRequest) {
-        return ResponseEntity.ok(exerciseService.updateExercise(id, exerciseUpdateNameRequest.getName()));
+        if (id == null || exerciseUpdateNameRequest.getName() == null
+                || exerciseUpdateNameRequest.getName().isEmpty()) {
+            return ResponseEntity.badRequest().build();
+        }
+        Optional<Exercise> exercise = exerciseService.updateExercise(id, exerciseUpdateNameRequest);
+        if (exercise.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(exercise.get());
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<String> create(@PathVariable Integer id) {
-        exerciseService.deleteExercise(id);
-        return ResponseEntity.ok("deleted");
+    public ResponseEntity<MessageResponse> delete(@PathVariable Integer id) {
+        if (id == null) {
+            return ResponseEntity.badRequest().build();
+        }
+        if (exerciseService.deleteExercise(id)) {
+            return ResponseEntity.ok(new MessageResponse("Resource was succesfully deleted"));
+        }
+        return ResponseEntity.notFound().build();
     }
-
 }
