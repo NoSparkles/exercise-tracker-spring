@@ -4,18 +4,23 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Service;
 
 import com.robertas.exerciseTracker.models.Record;
 import com.robertas.exerciseTracker.models.User;
 import com.robertas.exerciseTracker.payloads.requests.RecordCreateRequest;
 import com.robertas.exerciseTracker.payloads.requests.RecordUpdateRequest;
+import com.robertas.exerciseTracker.repositories.ExerciseRepository;
 import com.robertas.exerciseTracker.repositories.RecordRepository;
 
+@Service
 public class RecordService {
     private final RecordRepository recordRepository;
+    private final ExerciseRepository exerciseRepository;
 
-    public RecordService(RecordRepository recordRepository) {
+    public RecordService(RecordRepository recordRepository, ExerciseRepository exerciseRepository) {
         this.recordRepository = recordRepository;
+        this.exerciseRepository = exerciseRepository;
     }
 
     public List<Record> getRecords() {
@@ -26,15 +31,11 @@ public class RecordService {
         return this.recordRepository.findById(id);
     }
 
-    public List<Record> getRecordsByExerciseId(Integer exerciseId) {
-        return this.recordRepository.findAllByExerciseId(exerciseId);
-    }
-
     public Record createRecord(RecordCreateRequest recordCreateRequest) {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Record record = new Record();
         record.setUserId(user.getId());
-        record.setExerciseId(recordCreateRequest.getExerciseId());
+        record.setExercise(exerciseRepository.findById(recordCreateRequest.getExerciseId()).get());
         record.setDate(recordCreateRequest.getDate());
         record.setSet1Weight(recordCreateRequest.getSet1Weight());
         record.setSet2Weight(recordCreateRequest.getSet2Weight());

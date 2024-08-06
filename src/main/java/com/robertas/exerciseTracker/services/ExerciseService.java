@@ -11,16 +11,13 @@ import com.robertas.exerciseTracker.models.User;
 import com.robertas.exerciseTracker.payloads.requests.ExerciseCreateRequest;
 import com.robertas.exerciseTracker.payloads.requests.ExerciseUpdateNameRequest;
 import com.robertas.exerciseTracker.repositories.ExerciseRepository;
-import com.robertas.exerciseTracker.repositories.RecordRepository;
 
 @Service
 public class ExerciseService {
     private final ExerciseRepository exerciseRepository;
-    private final RecordRepository recordRepository;
 
-    public ExerciseService(ExerciseRepository exerciseRepository, RecordRepository recordRepository) {
+    public ExerciseService(ExerciseRepository exerciseRepository) {
         this.exerciseRepository = exerciseRepository;
-        this.recordRepository = recordRepository;
     }
 
     public List<Exercise> getExercises() {
@@ -59,9 +56,6 @@ public class ExerciseService {
         Optional<Exercise> exercise = exerciseRepository.findById(id);
         if (exercise.isPresent()) {
             exerciseRepository.delete(exercise.get());
-            List<Integer> recordIds = this.recordRepository.findAllByExerciseId(id)
-                    .stream().map(item -> item.getId()).toList();
-            recordRepository.deleteAllById(recordIds);
             return true;
         }
         return false;
