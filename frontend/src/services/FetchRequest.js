@@ -1,11 +1,9 @@
 const fetchRequest = async (path = '/', method = 'GET', body = {}, headers = {}, needAuth = false) => {
-
   let url = 'http://localhost:8080'
   let response = null;
   let data = null;
   let error = null;
   let requiresRelogin = false
-  
   const fetchOptions = {
     method: method,
     headers: {
@@ -13,15 +11,12 @@ const fetchRequest = async (path = '/', method = 'GET', body = {}, headers = {},
       ...headers,
     },
   };
-
   if (needAuth) {
     fetchOptions.headers['Authorization'] = `Bearer ${localStorage.getItem("token")}`;
   }
-
   if (method !== "GET") {
     fetchOptions.body = JSON.stringify(body);
   }
-
   try {
     response = await fetch(url + path, fetchOptions);
     data = await response.json();
@@ -34,7 +29,6 @@ const fetchRequest = async (path = '/', method = 'GET', body = {}, headers = {},
   } catch (err) {
     error = err;
   }
-
   return [data, error, requiresRelogin];
 };
 

@@ -6,17 +6,17 @@ import HomePage from './pages/homepage/HomePage'
 import LoginPage from './pages/loginpage/LoginPage'
 import SignupPage from './pages/signuppage/SignupPage'
 
-function App() {
-  
+export const UserContext = React.createContext(null)
 
+function App() {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path='/' Component={HomePage}/>
-        <Route path='login' Component={LoginPage}/>
-        <Route path='signup' Component={SignupPage}/>
-      </Routes>
-    </BrowserRouter>
+      <BrowserRouter>
+        <Routes>
+          <Route path='/' Component={HomePage}/>
+          <Route path='login' Component={LoginPage}/>
+          <Route path='signup' Component={SignupPage}/>
+        </Routes>
+      </BrowserRouter>
   )
 }
 

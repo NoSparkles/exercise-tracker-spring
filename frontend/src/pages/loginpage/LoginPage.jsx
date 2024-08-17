@@ -2,10 +2,13 @@ import React from 'react'
 import Navbar from '../../components/Navbar'
 import './loginpage.css'
 import { Link } from 'react-router-dom'
+import useUser from '../../hooks/useUser'
+import { UserContext } from '../../App'
 
 const LoginPage = () => {
+  const [user, loading, authenticated] = useUser()
   return (
-    <>
+    <UserContext.Provider value={[user, loading, authenticated]}>
       <Navbar></Navbar>
       <div className="login-page">
         <div className="circles">
@@ -29,7 +32,7 @@ const LoginPage = () => {
           </form>
         </div>
       </div>
-    </>
+    </UserContext.Provider>
   )
 }
 

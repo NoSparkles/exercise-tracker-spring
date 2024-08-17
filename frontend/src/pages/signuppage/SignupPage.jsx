@@ -2,10 +2,13 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import Navbar from '../../components/Navbar'
 import './signuppage.css'
+import { UserContext } from '../../App'
+import useUser from '../../hooks/useUser'
 
 const SignupPage = () => {
+  const [user, loading, authenticated] = useUser()
   return (
-    <>
+    <UserContext.Provider value={[user, loading, authenticated]}>
       <Navbar></Navbar>
       <div className="signup-page">
         <div className="circles">
@@ -33,7 +36,7 @@ const SignupPage = () => {
           </form>
         </div>
       </div>
-    </>
+    </UserContext.Provider>
   )
 }
 
