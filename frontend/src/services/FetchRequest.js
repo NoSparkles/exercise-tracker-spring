@@ -5,7 +5,7 @@ const fetchRequest = async (path = '/', method = 'GET', body = {}, headers = {},
   let data = null;
   let error = null;
   let requiresRelogin = false
-
+  
   const fetchOptions = {
     method: method,
     headers: {
