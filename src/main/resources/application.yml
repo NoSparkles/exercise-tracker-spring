@@ -1,0 +1,19 @@
+spring:
+  application:
+    name: exerciseTracker
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/exerciseTracker
+    username: postgres
+    password: Robertas123
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    database: postgresql
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    show-sql: true
+    properties:
+      hibernate:
+        format-sql: true

@@ -1,0 +1,117 @@
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: inter, 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
+:root{
+  --color-light-pink: #FFB2E6;
+  --color-pink: #D972FF;
+  --color-purple: #8447FF;
+  --color-light-green: #8CFFDA;
+  --color-white: #ddd;
+  --color-light-gray: #aaa;
+  --color-dark-gray: #111;
+  --color-black: #000;
+
+  --font-size-base: 16px;
+  --font-size-small: 12px;
+  --font-size-large: 20px;
+  --font-size-heading: 32px;
+  --font-size-hero: 44px;
+
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 16px;
+  --spacing-lg: 24px;
+  --spacing-xl: 32px;
+  --spacing-xxl: 44px;
+}
+
+body{
+  background-color: var(--color-black);
+}
+
+.navbar{
+  height: 80px;
+  width: 100vw;
+  background: var(--color-black);
+  outline: 1px solid var(--color-white);
+  display: flex;
+  justify-content: space-between;
+  position: fixed;
+  z-index: 10000;
+
+}
+.navbar .home-link{
+  display: flex;
+  align-items: center;
+  margin-left: calc(var(--spacing-xxl) * 2);
+}
+.navbar .home-link a{
+  font-size: var(--font-size-heading);
+  color: var(--color-white);
+  font-weight: bold;
+  text-decoration: none;
+  color: var(--color-purple)
+}
+.navbar .links{
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+  margin-right: calc(var(--spacing-xxl) * 2);
+}
+.navbar .links a{
+  color: var(--color-white);
+  text-decoration: none;
+  font-size: var(--font-size-base);
+}
+.navbar .links .profile-link{
+  font-size: var(--font-size-large);
+  font-weight: bold;
+  color: var(--color-light-green)
+}
+
+@keyframes rotate {
+  0%{
+    transform: rotate(0deg);
+  }
+  100%{
+    transform: rotate(360deg);
+  }
+}
+.input-group {
+  width: 100%;
+  border-radius: 20px;
+  padding: var(--spacing-md) var(--spacing-md);
+  background-color: transparent;
+  outline: 1px solid white;
+  position: relative;
+}
+.input-group input{
+  background-color: transparent;
+  width: 100%;
+  font-size: var(--font-size-base);
+  outline: none;
+  border: none;
+  color: var(--color-white);
+}
+.input-group label{
+  position: absolute;
+  color: var(--color-white);
+  top: 50%;
+  transform: translateY(-50%);
+  left: var(--spacing-md);
+  background-color: var(--color-black);
+  font-size: var(--font-size-base);
+  z-index: -1;
+  transition: 0.1s ease;
+}
+.input-group input:focus ~ label, .input-group input:valid ~ label{
+  z-index: 1;
+  top: 0;
+  transform: translateY(-50%);
+  padding: 0 var(--spacing-sm);
+  font-size: var(--font-size-small);
+  background-color: var(--color-black);
+}
