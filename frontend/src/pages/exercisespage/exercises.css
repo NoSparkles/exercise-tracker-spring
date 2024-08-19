@@ -1,0 +1,92 @@
+:root{
+  --color-light-pink: #FFB2E6;
+  --color-pink: #D972FF;
+  --color-purple: #8447FF;
+  --color-light-green: #8CFFDA;
+  --color-red: #c23434;
+  --color-white: #ddd;
+  --color-light-gray: #aaa;
+  --color-dark-gray: #111;
+  --color-black: #000;
+
+  --font-size-base: 16px;
+  --font-size-small: 12px;
+  --font-size-large: 20px;
+  --font-size-heading: 32px;
+  --font-size-hero: 44px;
+
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 16px;
+  --spacing-lg: 24px;
+  --spacing-xl: 32px;
+  --spacing-xxl: 44px;
+}
+.exercises-page{
+  padding-top: 100px;
+}
+.exercises-page .search-add{
+  display: flex;
+  gap: var(--spacing-md);
+  justify-content: center;
+}
+.exercises-page .search-add .input-group{
+  width: 400px;
+}
+.exercises-page .search-add .add-exercise{
+  padding: var(--spacing-sm) var(--spacing-md);
+  border-radius: 10px;
+  border: none;
+  outline: none;
+  font-size: var(--font-size-base);
+  cursor: pointer;
+  background-color: var(--color-light-green);
+  color: var(--color-black);
+  font-weight: bold;
+  transition: 0.2s ease;
+}
+.exercises-page .search-add .add-exercise:hover{
+  background-color: var(--color-light-pink);
+  /* color: var(--color-light-green);
+   outline: 2px solid var(--color-light-green); */
+}
+.exercises-page .exercise-list {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-column-gap: var(--spacing-xl);
+  grid-row-gap: var(--spacing-xl);
+  width: 100%;
+  padding: var(--spacing-xl) var(--spacing-xxl);
+}
+.exercises-page .exercise-list .exercise{
+  outline: 2px solid var(--color-white);
+  background-color: transparent;
+  backdrop-filter: blur(10px);
+  border-radius: 10px;
+}
+.exercises-page .exercise-list .exercise{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 200px;
+  position: relative;
+  cursor: pointer;
+}
+.exercises-page .exercise-list .exercise span{
+  color: var(--color-white);
+  font-size: var(--font-size-large);
+}
+.exercises-page .exercise-list .exercise svg{
+  fill: var(--color-white);
+  height: 20px;
+  width: 20px;
+  position: absolute;
+  top: var(--spacing-sm);
+  right: var(--spacing-sm);
+  font-weight: bold;
+  cursor: pointer;
+  transform: 0.2s ease;
+}
+.exercises-page .exercise-list .exercise svg:hover{
+  fill: var(--color-red);
+}

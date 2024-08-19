@@ -1,10 +1,9 @@
-import React, {useState, useEffect} from 'react'
+import React from 'react'
 import Navbar from '../../components/Navbar'
 import { Link } from 'react-router-dom'
 import './homepage.css'
 import useUser from '../../hooks/useUser'
 import { UserContext } from '../../App'
-
 
 const HomePage = () => {
   const [user, loading, authenticated] = useUser()

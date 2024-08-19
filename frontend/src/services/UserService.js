@@ -1,33 +1,41 @@
 import fetchRequest from "./FetchRequest";
 
 export default class UserService {
-  static isLoggedIn() {
-    return UserService.me().then(([data, error, requiresReLogin]) => requiresReLogin);
-  }
-
   static create(email, password, fullName) {
-    return fetchRequest('/auth/signup', "POST", { email, password, fullName });
+    //returns Promise<str> 
+    return fetchRequest('/auth/signup', "POST", { email, password, fullName })
+    .then(([data, error]) => {
+      if (!error) {
+        return true
+      }
+      else {
+        return false
+      }
+    })
   }
 
   static login(email, password) {
-    return fetchRequest('/auth/login', "POST", { email, password }).then(([data, error, requiresReLogin]) => {
+    //returns Promise<str>
+    return fetchRequest('/auth/login', "POST", { email, password }).then(([data, error]) => {
+      console.log({data, error})
       if (!error && data.token) {
-        localStorage.setItem('token', data.token);
+        localStorage.setItem('token', data.token)
+        return true
       }
-      return [data, error, requiresReLogin];
-    });
+      return false
+    })
+    .catch((err) => {
+      return false
+    })
   }
 
   static getAll() {
-    return fetchRequest('/users/');
+    // returns Promise<[data, error]>
+    return fetchRequest('/users')
   }
 
   static me() {
-    return fetchRequest('/users/me', "GET", {}, {}, true).then(([data, error, requiresReLogin]) => {
-      if (requiresReLogin) {
-        localStorage.removeItem('token');
-      }
-      return [data, error, requiresReLogin];
-    });
+    // returns Promise<[data, error]>
+    return fetchRequest('/users/me', "GET", {}, {}, true)
   }
 }

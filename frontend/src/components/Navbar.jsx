@@ -22,6 +22,7 @@ const Navbar = () => {
       return 
     }
     setLinks(<>
+    <Link to='/exercises'>Exercises</Link>
       <Link to='/profile'>Welcome, {user.fullName}!</Link>
     </>)
   }, [loading]);

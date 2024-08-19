@@ -5,6 +5,7 @@ import "./index.css"
 import HomePage from './pages/homepage/HomePage'
 import LoginPage from './pages/loginpage/LoginPage'
 import SignupPage from './pages/signuppage/SignupPage'
+import ExercisesPage from './pages/exercisespage/ExercisesPage'
 
 export const UserContext = React.createContext(null)
 
@@ -15,6 +16,7 @@ function App() {
           <Route path='/' Component={HomePage}/>
           <Route path='login' Component={LoginPage}/>
           <Route path='signup' Component={SignupPage}/>
+          <Route path='exercises' Component={ExercisesPage}/>
         </Routes>
       </BrowserRouter>
   )
