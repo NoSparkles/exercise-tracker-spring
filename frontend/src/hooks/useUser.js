@@ -12,11 +12,16 @@ const useUser = () => {
         setUser(data)
         setAuthenticated(true)
       }
+      else {
+        setAuthenticated(false)
+        localStorage.removeItem('token')
+      }
       setLoading(false)
     })
     .catch(err => {
       setAuthenticated(false)
       setLoading(false)
+      localStorage.removeItem('token')
     })
   }, [])
   return [user, loading, authenticated]

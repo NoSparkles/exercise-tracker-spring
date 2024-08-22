@@ -1,6 +1,6 @@
 import fetchRequest from "./FetchRequest";
 
-export default class UserService {
+export default class ExerciseService {
   static getAll() {
     // returns Promise<[] of exercises>
     return fetchRequest('/exercises')
