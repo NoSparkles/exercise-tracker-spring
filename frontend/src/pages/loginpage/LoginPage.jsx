@@ -44,7 +44,7 @@ const LoginPage = () => {
   return (
     <UserContext.Provider value={[user, loading, authenticated]}>
       {
-        showToast ? <Toast text={toastText}/> : <></>
+        showToast ? <Toast text={toastText} color={'red'}/> : <></>
       }
       
       <Navbar />

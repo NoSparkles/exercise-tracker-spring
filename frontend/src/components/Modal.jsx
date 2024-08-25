@@ -1,12 +1,20 @@
 import React from 'react'
 
-const Modal = ({text, setShowModal, setAnswer}) => {
+const Modal = ({modalClass, setShowModal, children}) => {
+  const handleWrapperClick = (e) => {
+    if (e.target.className === 'modal-wrapper') {
+      setShowModal(false)
+    }
+  }
+
+  const handleModalClick = (e) => {
+    e.stopPropagation()
+  }
+
   return (
-    <div className='modal-wrapper'>
-      <div className="modal">
-        <span>{text}</span>
-        <button className='yes-button'>Yes</button>
-        <button className='no-button'>No</button>
+    <div className='modal-wrapper' onClick={handleWrapperClick}>
+      <div className={"modal " + modalClass} onClick={handleModalClick}>
+        {children}
       </div>
     </div>
   )

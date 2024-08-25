@@ -105,7 +105,6 @@ body{
   left: var(--spacing-md);
   background-color: var(--color-black);
   font-size: var(--font-size-base);
-  z-index: -1;
   transition: 0.1s ease;
 }
 .input-group input:focus ~ label, .input-group input:valid ~ label{
@@ -119,7 +118,6 @@ body{
 .toast {
   position: fixed;
   z-index: 1000000;
-  background-color: var(--color-red);
   min-width: 200px;
   padding: var(--spacing-sm) var(--spacing-xxl);
   max-width: 600px;
@@ -131,4 +129,26 @@ body{
   top: var(--spacing-lg);
   transform: translate(-50%, 0);
   color: var(--color-white);
+}
+.red {
+  background-color: var(--color-red);
+}
+.green {
+  background-color: var(--color-light-green);
+}
+.modal-wrapper{
+  position: fixed;
+  width: 100%;
+  z-index: 100;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.4);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.modal-wrapper .modal{
+  padding: var(--spacing-lg) var(--spacing-xxl);
+  background-color: var(--color-black);
+  border-radius: 20px;
+  max-width: 90%;
 }

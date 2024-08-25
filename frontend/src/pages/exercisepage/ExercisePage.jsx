@@ -5,6 +5,10 @@ import useUser from '../../hooks/useUser'
 import { UserContext } from '../../App'
 import './exercise.css'
 import ExerciseService from '../../services/ExerciseService'
+import RecordRow from '../../components/RecordRow'
+import Modal from '../../components/Modal'
+import RecordService from '../../services/RecordService'
+import Toast from '../../components/Toast'
 
 const ExercisePage = () => {
   const [user, loading, authenticated] = useUser()
@@ -12,6 +16,16 @@ const ExercisePage = () => {
   const [type, setType] = useState('weight')
   const [period, setPeriod] = useState('all')
   const [exercise, setExercise] = useState(undefined)
+  const [showModal, setShowModal] = useState(false)
+  const [modalData, setModalData] = useState({})
+  const [create, setCreate] = useState(false)
+  const [showToast, setShowToast] = useState(false)
+  const [toastText, setToastText] = useState("")
+  const [toastColor, setToastColor] = useState("green")
+
+  useEffect(() => {
+    console.log({modalData})
+  }, [modalData])
 
   useEffect(() => {
     ExerciseService.get(id)
@@ -31,8 +45,197 @@ const ExercisePage = () => {
     setPeriod(event.target.value)
   }
 
+  const handleUpdateOrCreate = () => {
+    if (!create) {
+      RecordService.update(modalData.id, {...modalData})
+      .then(data => {
+        if (!data.error) {
+          handleUpdateRow(data)
+          setToastText("record was succesfully updated")
+          setShowToast(true)
+          setToastColor('green')
+          setTimeout(() => {
+            setShowToast(false)
+          }, 2000);
+        }
+        else {
+          setToastText("an error occured while updating record")
+          setShowToast(true)
+          setToastColor('red')
+          setTimeout(() => {
+            setShowToast(false)
+          }, 2000);
+        }
+        setShowModal(false)
+      })
+      return
+    }
+    RecordService.create(modalData)
+    .then(data => {
+      if (!data.error) {
+        data.exercise = data.exercise.id
+        handleAddRow(data)
+        setToastText("record was succesfully created")
+        setShowToast(true)
+        setToastColor('green')
+        setTimeout(() => {
+          setShowToast(false)
+        }, 2000);
+      }
+      else {
+        setToastText("an error occured while creating record")
+        setShowToast(true)
+        setToastColor('red')
+        setTimeout(() => {
+          setShowToast(false)
+        }, 2000);
+      }
+      setShowModal(false)
+    })
+  }
+
+  const handleUpdateRow = (data) => {
+    setExercise(prev => {
+      const records = prev.records.map((item) => {
+        if (item.id === data.id) {
+          return data
+        }
+        else {
+          return item
+        }
+      })
+      return {...prev, records}
+    })
+  }
+
+  const handleAddRow = (data) => {
+    setExercise(prev => {
+      const records = prev.records
+      records.push(data)
+      return {...prev, records}
+    })
+  }
+
+  const handleAddRowClick = () => {
+    setCreate(true)
+    const today = new Date()
+    const year = today.getFullYear()
+    const month = String(today.getMonth() + 1).padStart(2, '0')
+    const day = String(today.getDate()).padStart(2, '0')
+    const date = `${year}-${month}-${day}`;
+    setModalData({
+      exerciseId: exercise.id,
+      date,
+      set1Weight: 0,
+      set2Weight: 0,
+      set3Weight: 0,
+      set4Weight: 0,
+      set1Reps: 0,
+      set2Reps: 0,
+      set3Reps: 0,
+      set4Reps: 0
+    })
+    setShowModal(true)
+  }
+
   return (
     <UserContext.Provider value={[user, loading, authenticated]}>
+      {
+        showToast && <Toast text={toastText} color={toastColor}/>
+      }
+      {
+        showModal && (
+          <Modal
+            modalClass='update-record' setShowModal={setShowModal}>
+            <span>{create ? 'Create' : 'Update'} record</span>
+            <div className="table-container">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Date</th>
+                    <th>Set 1 Weight</th>
+                    <th>Set 2 Weight</th>
+                    <th>Set 3 Weight</th>
+                    <th>Set 4 Weight</th>
+                    <th>Set 1 Reps</th>
+                    <th>Set 2 Reps</th>
+                    <th>Set 3 Reps</th>
+                    <th>Set 4 Reps</th>
+                  </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                    <td><input type="text" defaultValue={modalData.date || '-'} onChange={(e) => {
+                      setModalData(prev => {
+                        return {
+                          ...prev, date: e.target.value
+                        }
+                      })
+                    }}/></td>
+                    <td><input type="number" defaultValue={modalData.set1Weight || 0} onChange={(e) => {
+                      setModalData(prev => {
+                        return {
+                          ...prev, set1Weight: e.target.value
+                        }
+                      })
+                    }}/></td>
+                    <td><input type="number" defaultValue={modalData.set2Weight || 0} onChange={(e) => {
+                      setModalData(prev => {
+                        return {
+                          ...prev, set2Weight: e.target.value
+                        }
+                      })
+                    }}/></td>
+                    <td><input type="number" defaultValue={modalData.set3Weight || 0} onChange={(e) => {
+                      setModalData(prev => {
+                        return {
+                          ...prev, set3Weight: e.target.value
+                        }
+                      })
+                    }}/></td>
+                    <td><input type="number" defaultValue={modalData.set4Weight || 0} onChange={(e) => {
+                      setModalData(prev => {
+                        return {
+                          ...prev, set4Weight: e.target.value
+                        }
+                      })
+                    }}/></td>
+                    <td><input type="number" defaultValue={modalData.set1Reps || 0} onChange={(e) => {
+                      setModalData(prev => {
+                        return {
+                          ...prev, set1Reps: e.target.value
+                        }
+                      })
+                    }}/></td>
+                    <td><input type="number" defaultValue={modalData.set2Reps || 0} onChange={(e) => {
+                      setModalData(prev => {
+                        return {
+                          ...prev, set2Reps: e.target.value
+                        }
+                      })
+                    }}/></td>
+                    <td><input type="number" defaultValue={modalData.set3Reps || 0} onChange={(e) => {
+                      setModalData(prev => {
+                        return {
+                          ...prev, set3Reps: e.target.value
+                        }
+                      })
+                    }}/></td>
+                    <td><input type="number" defaultValue={modalData.set4Reps || 0} onChange={(e) => {
+                      setModalData(prev => {
+                        return {
+                          ...prev, set4Reps: e.target.value
+                        }
+                      })
+                    }}/></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <button onClick={handleUpdateOrCreate}>Save</button>
+          </Modal>
+        )
+      }
       <Navbar />
       <div className="exercise-page">
         {
@@ -106,38 +309,31 @@ const ExercisePage = () => {
                 </label>
               </div>
             </div>
-            <table className="records-table">
-              <thead>
-                <tr>
-                  <th>Date</th>
-                  <th>Set 1 Weight</th>
-                  <th>Set 2 Weight</th>
-                  <th>Set 3 Weight</th>
-                  <th>Set 4 Weight</th>
-                  <th>Set 1 Reps</th>
-                  <th>Set 2 Reps</th>
-                  <th>Set 3 Reps</th>
-                  <th>Set 4 Reps</th>
-                </tr>
-              </thead>
-              <tbody>
-                {
-                  exercise?.records.map((item, index) => (
-                    <tr key={index}>
-                      <td>{item.date}</td>
-                      <td>{item.set1Weight || '-'}</td>
-                      <td>{item.set2Weight || '-'}</td>
-                      <td>{item.set3Weight || '-'}</td>
-                      <td>{item.set4Weight  || '-'}</td>
-                      <td>{item.set1Reps || '-'}</td>
-                      <td>{item.set2Reps || '-'}</td>
-                      <td>{item.set3Reps || '-'}</td>
-                      <td>{item.set4Reps || '-'}</td>
-                    </tr>
-                  ))
-                }
-              </tbody>
-            </table>
+            <div className="table-container">
+              <button className='add-row' onClick={handleAddRowClick}>Add row</button>
+              <table className="records-table">
+                <thead>
+                  <tr>
+                    <th>Date</th>
+                    <th>Set 1 Weight</th>
+                    <th>Set 2 Weight</th>
+                    <th>Set 3 Weight</th>
+                    <th>Set 4 Weight</th>
+                    <th>Set 1 Reps</th>
+                    <th>Set 2 Reps</th>
+                    <th>Set 3 Reps</th>
+                    <th>Set 4 Reps</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {
+                    exercise?.records.map((item, index) => (
+                      <RecordRow key={index} item={item} setModalData={setModalData} setShowModal={setShowModal} setCreate={setCreate}/>
+                    ))
+                  }
+                </tbody>
+              </table>
+            </div>
           </>
           ) : (
             <>

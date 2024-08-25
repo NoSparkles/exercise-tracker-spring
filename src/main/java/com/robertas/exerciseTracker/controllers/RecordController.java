@@ -31,7 +31,7 @@ public class RecordController {
     this.exerciseService = exerciseService;
   }
 
-  @GetMapping("/")
+  @GetMapping("")
   public ResponseEntity<List<Record>> getRecords() {
     return ResponseEntity.ok(recordService.getRecords());
   }

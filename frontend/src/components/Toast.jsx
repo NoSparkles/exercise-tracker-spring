@@ -1,8 +1,8 @@
 import React from 'react'
 
-const Toast = ({text}) => {
+const Toast = ({text, color}) => {
   return (
-    <div className='toast'>{text}</div>
+    <div className={`toast ${color}`}>{text}</div>
   )
 }
 

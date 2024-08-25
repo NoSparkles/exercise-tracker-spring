@@ -15,6 +15,7 @@ const ExercisesPage = () => {
   useEffect(() => {
     ExerciseService.getAll()
     .then(data => setExercises(data))
+    console.log(exercises)
   }, [])
   return (
     <UserContext.Provider value={[user, loading, authenticated]}>

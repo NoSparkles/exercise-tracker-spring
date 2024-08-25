@@ -17,7 +17,6 @@ export default class UserService {
   static login(email, password) {
     //returns Promise<str>
     return fetchRequest('/auth/login', "POST", { email, password }).then(([data, error]) => {
-      console.log({data, error})
       if (!error && data.token) {
         localStorage.setItem('token', data.token)
         return true

@@ -6,7 +6,6 @@ const ExerciseBox = ({ exercise }) => {
 
   const handleSvgClick = (e) => {
     e.stopPropagation()
-    //to do: show modal
   }
 
   return (
