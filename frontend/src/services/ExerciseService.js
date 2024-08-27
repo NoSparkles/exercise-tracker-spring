@@ -21,4 +21,14 @@ export default class ExerciseService {
       return data
     })
   }
+  static create(name) {
+    // returns Promise<{} of exercise>
+    return fetchRequest(`/exercises/create`, "POST", {name}, {}, true)
+    .then(([data, error]) => {
+      if (error) {
+        return {error: true}
+      }
+      return data
+    })
+  }
 }

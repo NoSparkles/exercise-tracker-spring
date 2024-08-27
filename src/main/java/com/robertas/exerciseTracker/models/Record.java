@@ -17,7 +17,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-
 import lombok.Getter;
 import lombok.Setter;
 
@@ -40,7 +39,7 @@ public class Record {
     private Exercise exercise;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private Date date;
 
     @Column(nullable = false)
