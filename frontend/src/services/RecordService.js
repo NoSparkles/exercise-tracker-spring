@@ -42,4 +42,13 @@ export default class RecordService {
       return data
     })
   }
+  static delete(id) {
+    return fetchRequest(`/records/delete/${id}`, "DELETE", {}, {}, true)
+    .then(([data, error]) => {
+      if (error) {
+        return {error}
+      }
+      return data
+    })
+  }
 }

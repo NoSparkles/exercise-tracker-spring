@@ -106,6 +106,7 @@ body{
   background-color: var(--color-black);
   font-size: var(--font-size-base);
   transition: 0.1s ease;
+  z-index: -1;
 }
 .input-group input:focus ~ label, .input-group input:valid ~ label{
   z-index: 1;

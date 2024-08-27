@@ -22,6 +22,7 @@ const ExercisePage = () => {
   const [showToast, setShowToast] = useState(false)
   const [toastText, setToastText] = useState("")
   const [toastColor, setToastColor] = useState("green")
+  const [showDeleteModal, setShowDeleteModal] = useState(false)
 
   useEffect(() => {
     console.log({modalData})
@@ -138,6 +139,47 @@ const ExercisePage = () => {
     setShowModal(true)
   }
 
+  const handleDeleteButton = () => {
+    setShowDeleteModal(true)
+  }
+
+  const handleNoDelete = () => {
+    setShowDeleteModal(false)
+  }
+
+  const handleYesDelete = () => {
+    RecordService.delete(modalData.id)
+    .then((data) => {
+      if (!data.error) {
+        handleDeleteRow(modalData.id)
+        setShowDeleteModal(false)
+        setShowModal(false)
+        setToastText("record was succesfully deleted")
+        setShowToast(true)
+        setToastColor('green')
+        setTimeout(() => {
+          setShowToast(false)
+        }, 2000);
+      }
+      else {
+        setToastText("an error occured while deleting record")
+        setShowToast(true)
+        setToastColor('red')
+        setTimeout(() => {
+          setShowToast(false)
+        }, 2000);
+      }
+    })
+  }
+
+  const handleDeleteRow = (rowId) => {
+    setExercise(prev => {
+      const records = prev.records.filter(item => {
+        return item.id !== rowId
+      })
+      return {...prev, records}
+    })
+  }
   return (
     <UserContext.Provider value={[user, loading, authenticated]}>
       {
@@ -232,7 +274,28 @@ const ExercisePage = () => {
                 </tbody>
               </table>
             </div>
-            <button onClick={handleUpdateOrCreate}>Save</button>
+            <div className="buttons">
+              <button onClick={handleUpdateOrCreate}>Save</button>
+              <button 
+                className='delete-button'
+                onClick={handleDeleteButton}    
+              >Delete</button>
+            </div>
+            
+          </Modal>
+        )
+      }
+      {
+        showDeleteModal && (
+          <Modal modalClass={'delete-record'}
+            setShowModal={setShowDeleteModal}
+          >
+            <span>Are you sure that you want to delete this record?</span>
+            <div className="buttons">
+              <button className='yes-button' onClick={handleYesDelete}>Yes</button>
+              <button className='no-button' onClick={handleNoDelete}>No</button>
+            </div>
+            
           </Modal>
         )
       }
