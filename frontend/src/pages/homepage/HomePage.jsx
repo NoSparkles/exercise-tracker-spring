@@ -44,13 +44,18 @@ const HomePage = () => {
               </li>
             </ul>
           </section>
-          <section className='get-started'>
-            <h1>Get Started</h1>
-            <div className='content'>
-              <p>Sign up today and take the first step towards a healthier lifestyle. Already have an account? Log in and see how you're doing.</p>
-              <Link to='signup'>Sign up</Link>
-            </div>
-          </section>
+          {
+            !loading && !authenticated && (
+              <section className='get-started'>
+                <h1>Get Started</h1>
+                <div className='content'>
+                  <p>Sign up today and take the first step towards a healthier lifestyle. Already have an account? Log in and see how you're doing.</p>
+                  <Link to='signup'>Sign up</Link>
+                </div>
+              </section>
+            )
+          }
+          
         </div>
       </div>
     </UserContext.Provider>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Navbar from '../../components/Navbar';
 import './loginpage.css';
 import { Link, useNavigate } from 'react-router-dom';
@@ -16,6 +16,11 @@ const LoginPage = () => {
   const [toastText, setToastText] = useState("")
   const navigate = useNavigate()
 
+  useEffect(() => {
+    if (!loading && authenticated) {
+      navigate('/')
+    }
+  }, [loading])
   const handleSubmit = (e) => {
     e.preventDefault()
     if (email.length < 5) {

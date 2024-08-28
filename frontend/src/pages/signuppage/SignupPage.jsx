@@ -18,6 +18,12 @@ const SignupPage = () => {
   const [toastText, setToastText] = useState("")
   const navigate = useNavigate()
 
+  useEffect(() => {
+    if (!loading && authenticated) {
+      navigate('/')
+    }
+  }, [loading])
+
   const handleSubmit = (e) => {
     e.preventDefault()
     if (fullName.length < 5) {
