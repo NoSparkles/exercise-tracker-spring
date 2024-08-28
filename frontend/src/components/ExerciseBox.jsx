@@ -1,11 +1,12 @@
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
 
-const ExerciseBox = ({ exercise }) => {
+const ExerciseBox = ({ exercise, setDeleteExercise}) => {
   const navigate = useNavigate()
 
   const handleSvgClick = (e) => {
     e.stopPropagation()
+    setDeleteExercise(exercise)
   }
 
   return (

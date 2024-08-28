@@ -129,7 +129,8 @@ body{
   left: 50%;
   top: var(--spacing-lg);
   transform: translate(-50%, 0);
-  color: var(--color-white);
+  font-weight: bold;
+  color: var(--color-black);
 }
 .red {
   background-color: var(--color-red);

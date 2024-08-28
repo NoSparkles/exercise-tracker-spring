@@ -19,6 +19,8 @@ const ExercisesPage = () => {
   const [showToast, setShowToast] = useState(false)
   const [toastText, setToastText] = useState("")
   const [toastColor, setToastColor] = useState("green")
+  const [deleteExercise, setDeleteExercise] = useState(false)
+  const [showDeleteModal, setShowDeleteModal] = useState(false)
 
   useEffect(() => {
     ExerciseService.getAll()
@@ -38,6 +40,17 @@ const ExercisesPage = () => {
     
   }, [search])
 
+  useEffect(() => {
+    if (deleteExercise) {
+      setShowDeleteModal(true)
+    }
+  }, [deleteExercise])
+
+  useEffect(() => {
+    if (!showDeleteModal) {
+      setDeleteExercise(false)
+    }
+  }, [showDeleteModal])
   const handleAddClick = () => {
     setShowModal(true)
   }
@@ -75,6 +88,48 @@ const ExercisesPage = () => {
       return [...prev, data]
     })
   }
+
+  const handleYesDelete = () => {
+    ExerciseService.delete(deleteExercise.id)
+    .then((data) => {
+      if (!data.error) {
+        setShowDeleteModal(false)
+        setToastText("Exercise was succesfully deleted")
+        setShowToast(true)
+        setToastColor('green')
+        setTimeout(() => {
+          setShowToast(false)
+        }, 2000)
+        updateExercisesListAfterDelete(deleteExercise)
+        setDeleteExercise(false)
+      }
+      else {
+        setToastText("There was an error while deleting an exercise")
+        setShowToast(true)
+        setToastColor('red')
+        setTimeout(() => {
+          setShowToast(false)
+        }, 2000)
+      }
+    })
+  }
+
+  const updateExercisesListAfterDelete = (data) => {
+    setExercises(prev => {
+      return prev.filter(item => {
+        return item.id !== data.id
+      })
+    })
+    setFilteredExercises(prev => {
+      return prev.filter(item => {
+        return item.id !== data.id
+      })
+    })
+  }
+
+  const handleNoDelete = () => {
+    setShowDeleteModal(false)
+  }
   return (
     <UserContext.Provider value={[user, loading, authenticated]}>
       <Navbar/>
@@ -84,7 +139,9 @@ const ExercisesPage = () => {
         }
         {
           showModal && (
-            <Modal modalClass={'add-exercise-modal'} setShowModal={setShowModal}>
+            <Modal 
+              modalClass={'add-exercise-modal'} 
+              setShowModal={setShowModal}>
               <span>Add exercise</span>
               <div className="input-group">
               <input
@@ -96,6 +153,20 @@ const ExercisesPage = () => {
               <label>Name</label>
             </div>
             <button onClick={handleSaveExercise}>Save</button>
+            </Modal>
+          )
+        }
+        {
+          showDeleteModal && (
+            <Modal
+              modalClass={'delete-exercise-modal'}
+              setShowModal={setShowDeleteModal}
+            >
+              <span>Are you sure that you want to delete {deleteExercise?.name} exercise?</span>
+              <div className="buttons">
+                <button className='yes-button' onClick={handleYesDelete}>Yes</button>
+                <button className='no-button' onClick={handleNoDelete}>No</button>
+              </div>
             </Modal>
           )
         }
@@ -114,7 +185,7 @@ const ExercisesPage = () => {
         <ul className="exercise-list">
           {
             filteredExercises !== null ? filteredExercises.map((exercise, i) => (
-              <ExerciseBox key={i} exercise={exercise}/>
+              <ExerciseBox key={i} exercise={exercise} setDeleteExercise={setDeleteExercise}/>
             )) :
             (
               <span>Loading...</span>

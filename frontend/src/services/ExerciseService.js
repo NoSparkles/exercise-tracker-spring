@@ -31,4 +31,14 @@ export default class ExerciseService {
       return data
     })
   }
+  static delete(id) {
+    // returns Promise<{} of exercise>
+    return fetchRequest(`/exercises/delete/${id}`, "DELETE", {}, {}, true)
+    .then(([data, error]) => {
+      if (error) {
+        return {error: true}
+      }
+      return data
+    })
+  }
 }

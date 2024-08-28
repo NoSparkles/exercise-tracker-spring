@@ -252,7 +252,6 @@
   outline: 2px solid var(--color-light-green);
   width: 400px;
   text-align: center;
-  
 }
 .modal-wrapper .delete-record span{
   font-size: var(--font-size-large);
