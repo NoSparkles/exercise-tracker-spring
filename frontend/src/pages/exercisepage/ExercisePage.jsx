@@ -42,6 +42,10 @@ const ExercisePage = () => {
   const [graphOptions, setGraphOptions] = useState({})
 
   useEffect(() => {
+    console.log(period)
+  }, [period])
+
+  useEffect(() => {
     ExerciseService.get(id)
     .then((data) => {
       if (!data.error) {
@@ -127,23 +131,27 @@ const ExercisePage = () => {
 
   const filterRecordsByPeriod = (records, period) => {
     const now = new Date()
-    let filteredRecords = records
-
+    let cutoffDate;
+  
     switch (period) {
       case '1-year':
-        filteredRecords = records.filter(record => new Date(record.date) >= new Date(now.setFullYear(now.getFullYear() - 1)))
-        break
+        cutoffDate = new Date();
+        cutoffDate.setFullYear(now.getFullYear() - 1);
+        break;
       case '6-months':
-        filteredRecords = records.filter(record => new Date(record.date) >= new Date(now.setMonth(now.getMonth() - 6)))
-        break
+        cutoffDate = new Date();
+        cutoffDate.setMonth(now.getMonth() - 6);
+        break;
       case '3-months':
-        filteredRecords = records.filter(record => new Date(record.date) >= new Date(now.setMonth(now.getMonth() - 3)))
-        break
+        cutoffDate = new Date();
+        cutoffDate.setMonth(now.getMonth() - 3);
+        break;
       default:
-        break
+        cutoffDate = new Date(0);
+        break;
     }
-
-    return filteredRecords
+  
+    return records.filter(record => new Date(record.date) >= cutoffDate);
   }
 
   const generateWeightDatasets = (records) => {
