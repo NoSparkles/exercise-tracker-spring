@@ -9,7 +9,7 @@ import UserService from '../../services/UserService'
 import Toast from '../../components/Toast'
 
 const SignupPage = () => {
-  const [user, loading, authenticated] = useUser()
+  const [user, loading, authenticated, logout] = useUser()
   const [fullName, fullNameOnChange] = useInput("")
   const [email, emailOnChange] = useInput("")
   const [password, passwordOnChange] = useInput("")
@@ -76,7 +76,7 @@ const SignupPage = () => {
   }
 
   return (
-    <UserContext.Provider value={[user, loading, authenticated]}>
+    <UserContext.Provider value={[user, loading, authenticated, logout]}>
       {
         showToast ? <Toast text={toastText}/> : <></>
       }

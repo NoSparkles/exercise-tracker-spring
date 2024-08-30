@@ -9,7 +9,7 @@ import UserService from '../../services/UserService';
 import Toast from '../../components/Toast';
 
 const LoginPage = () => {
-  const [user, loading, authenticated] = useUser();
+  const [user, loading, authenticated, logout] = useUser();
   const [email, emailOnChange] = useInput("");
   const [password, passwordOnChange] = useInput("");
   const [showToast, setShowToast] = useState(false)
@@ -47,7 +47,7 @@ const LoginPage = () => {
   }
 
   return (
-    <UserContext.Provider value={[user, loading, authenticated]}>
+    <UserContext.Provider value={[user, loading, authenticated, logout]}>
       {
         showToast ? <Toast text={toastText} color={'red'}/> : <></>
       }

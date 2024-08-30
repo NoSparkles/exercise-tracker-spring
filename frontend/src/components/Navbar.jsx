@@ -3,7 +3,8 @@ import { Link } from 'react-router-dom';
 import { UserContext } from '../App';
 
 const Navbar = () => {
-  const [user, loading, authenticated] = useContext(UserContext)
+  const [user, loading, authenticated, logout] = useContext(UserContext)
+  console.log(logout)
   const [links, setLinks] = useState((
     <>
       <p style={{color: "white"}}>Loading...</p>
@@ -21,11 +22,15 @@ const Navbar = () => {
       </>)
       return 
     }
-    setLinks(<>
-    <Link to='/exercises'>Exercises</Link>
-      <Link to='/profile'>Welcome, {user.fullName}!</Link>
-    </>)
-  }, [loading]);
+    setLinks(
+      <>
+        <Link to='/exercises'>Exercises</Link>
+        <div className="user">
+          <span>Welcome, {user.fullName}!</span>
+          <button onClick={logout}>Logout</button>
+        </div>
+      </>)
+  }, [loading, authenticated]);
 
   return (
     <div className='navbar'>

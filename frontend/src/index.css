@@ -67,10 +67,43 @@ body{
   text-decoration: none;
   font-size: var(--font-size-base);
 }
-.navbar .links .profile-link{
+.navbar .links .user{
+  display: flex;
+  flex-direction: row;
+  position: relative;
+}
+.navbar .links .user:hover>button{
+  display: block;
+}
+.navbar .links .user span{
   font-size: var(--font-size-large);
   font-weight: bold;
-  color: var(--color-light-green)
+  color: var(--color-white);
+  text-align: center;
+  cursor: pointer;
+  max-width: 150px;
+}
+.navbar .links .user button {
+  position: absolute;
+  display: none;
+  left: 0;
+  bottom: 0;
+  transform: translateY(100%);
+  padding: var(--spacing-xs) var(--spacing-md);
+  align-self: center;
+  font-weight: bold;
+  background-color: var(--color-light-green);
+  border: none;
+  cursor: pointer;
+  width: 100%;
+  transition: 0.2s ease;
+}
+.navbar .links button:hover{
+  background-color: var(--color-light-pink);
+}
+
+@media only screen and (max-width: 800px) {
+  
 }
 
 @keyframes rotate {

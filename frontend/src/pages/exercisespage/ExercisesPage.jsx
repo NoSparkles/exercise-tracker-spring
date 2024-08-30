@@ -10,7 +10,7 @@ import Modal from '../../components/Modal'
 import Toast from '../../components/Toast'
 
 const ExercisesPage = () => {
-  const [user, loading, authenticated] = useUser()
+  const [user, loading, authenticated, logout] = useUser()
   const [search, searchOnChange] = useInput("")
   const [exercises, setExercises] = useState(null)
   const [filteredExercises, setFilteredExercises] = useState(null)
@@ -131,7 +131,7 @@ const ExercisesPage = () => {
     setShowDeleteModal(false)
   }
   return (
-    <UserContext.Provider value={[user, loading, authenticated]}>
+    <UserContext.Provider value={[user, loading, authenticated, logout]}>
       <Navbar/>
       <div className="exercises-page">
         {

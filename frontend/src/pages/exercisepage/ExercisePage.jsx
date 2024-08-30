@@ -23,7 +23,7 @@ import {
 ChartJS.register(LineElement, CategoryScale, LinearScale, PointElement, Tooltip, Legend)
 
 const ExercisePage = () => {
-  const [user, loading, authenticated] = useUser()
+  const [user, loading, authenticated, logout] = useUser()
   const id = useParams().id
   const [type, setType] = useState('weight')
   const [period, setPeriod] = useState('all')
@@ -347,7 +347,7 @@ const ExercisePage = () => {
     })
   }
   return (
-    <UserContext.Provider value={[user, loading, authenticated]}>
+    <UserContext.Provider value={[user, loading, authenticated, logout]}>
       {
         showToast && <Toast text={toastText} color={toastColor}/>
       }

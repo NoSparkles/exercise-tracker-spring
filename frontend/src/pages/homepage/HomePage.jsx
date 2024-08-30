@@ -6,9 +6,9 @@ import useUser from '../../hooks/useUser'
 import { UserContext } from '../../App'
 
 const HomePage = () => {
-  const [user, loading, authenticated] = useUser()
+  const [user, loading, authenticated, logout] = useUser()
   return (
-    <UserContext.Provider value={[user, loading, authenticated]}>
+    <UserContext.Provider value={[user, loading, authenticated, logout]}>
       <Navbar/>
       <div className='home-page'>
         <div className='circles'>
