@@ -74,9 +74,6 @@ const SignupPage = () => {
       })
     }
   }
-  useEffect(() => {
-    console.log({email, fullName, password, repeatPassword})
-  })
 
   return (
     <UserContext.Provider value={[user, loading, authenticated]}>

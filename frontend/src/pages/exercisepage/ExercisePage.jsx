@@ -45,11 +45,27 @@ const ExercisePage = () => {
     ExerciseService.get(id)
     .then((data) => {
       if (!data.error) {
+        const sortedRecords = [...data.records].sort((a, b) => new Date(a.date) - new Date(b.date)).reverse()
+        data.records = sortedRecords
         setExercise(data)
-        console.log(data)
       }
     })
   }, [id])
+
+  useEffect(() => {
+    console.log('updated')
+    if (exercise && exercise.records) {
+      const sortedRecords = [...exercise.records].sort((a, b) => new Date(a.date) - new Date(b.date)).reverse()
+
+      if (JSON.stringify(sortedRecords) !== JSON.stringify(exercise.records)) {
+        setExercise((prevExercise) => ({
+          ...prevExercise,
+          records: sortedRecords,
+        }));
+      }
+    }
+  }, [exercise?.records, exercise?.records.length]);
+
 
   useEffect(() => {
     if (exercise) {
@@ -70,6 +86,7 @@ const ExercisePage = () => {
 
     const filteredRecords = filterRecordsByPeriod(exercise.records, period)
     const labels = filteredRecords.map(record => record.date)
+    labels.reverse()
 
     const datasets = type === 'weight' 
       ? generateWeightDatasets(filteredRecords) 
