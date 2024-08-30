@@ -9,6 +9,18 @@ import RecordRow from '../../components/RecordRow'
 import Modal from '../../components/Modal'
 import RecordService from '../../services/RecordService'
 import Toast from '../../components/Toast'
+import { Line } from 'react-chartjs-2'
+import {
+  Chart as ChartJS,
+  LineElement,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  Tooltip,
+  Legend,
+} from 'chart.js'
+
+ChartJS.register(LineElement, CategoryScale, LinearScale, PointElement, Tooltip, Legend)
 
 const ExercisePage = () => {
   const [user, loading, authenticated] = useUser()
@@ -23,10 +35,11 @@ const ExercisePage = () => {
   const [toastText, setToastText] = useState("")
   const [toastColor, setToastColor] = useState("green")
   const [showDeleteModal, setShowDeleteModal] = useState(false)
-
-  useEffect(() => {
-    console.log({modalData})
-  }, [modalData])
+  const [graphData, setGraphData] = useState({
+    labels: [],
+    datasets: [],
+  })
+  const [graphOptions, setGraphOptions] = useState({})
 
   useEffect(() => {
     ExerciseService.get(id)
@@ -36,7 +49,13 @@ const ExercisePage = () => {
         console.log(data)
       }
     })
-  }, [])
+  }, [id])
+
+  useEffect(() => {
+    if (exercise) {
+      generateGraphData()
+    }
+  }, [exercise, type, period])
 
   const handleGraphTypeChange = (event) => {
     setType(event.target.value)
@@ -44,6 +63,128 @@ const ExercisePage = () => {
 
   const handleGraphPeriodChange = (event) => {
     setPeriod(event.target.value)
+  }
+
+  const generateGraphData = () => {
+    if (!exercise || !exercise.records || exercise.records.length === 0) return;
+
+    const filteredRecords = filterRecordsByPeriod(exercise.records, period)
+    const labels = filteredRecords.map(record => record.date)
+
+    const datasets = type === 'weight' 
+      ? generateWeightDatasets(filteredRecords) 
+      : generateRepsDatasets(filteredRecords)
+
+    setGraphData({
+      labels,
+      datasets,
+    })
+
+    setGraphOptions({
+      responsive: true,
+      plugins: {
+        legend: {
+          position: 'top',
+        },
+        tooltip: {
+          mode: 'index',
+          intersect: false,
+        }
+      },
+      scales: {
+        x: {
+          title: {
+            display: true,
+            text: 'Date',
+          },
+        },
+        y: {
+          title: {
+            display: true,
+            text: type === 'weight' ? 'Weight (kg)' : 'Reps',
+          },
+        }
+      }
+    })
+  }
+
+  const filterRecordsByPeriod = (records, period) => {
+    const now = new Date()
+    let filteredRecords = records
+
+    switch (period) {
+      case '1-year':
+        filteredRecords = records.filter(record => new Date(record.date) >= new Date(now.setFullYear(now.getFullYear() - 1)))
+        break
+      case '6-months':
+        filteredRecords = records.filter(record => new Date(record.date) >= new Date(now.setMonth(now.getMonth() - 6)))
+        break
+      case '3-months':
+        filteredRecords = records.filter(record => new Date(record.date) >= new Date(now.setMonth(now.getMonth() - 3)))
+        break
+      default:
+        break
+    }
+
+    return filteredRecords
+  }
+
+  const generateWeightDatasets = (records) => {
+    return [
+      {
+        label: 'Set 1 Weight',
+        data: records.map(record => record.set1Weight),
+        borderColor: 'rgba(75, 192, 192, 1)',
+        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+      },
+      {
+        label: 'Set 2 Weight',
+        data: records.map(record => record.set2Weight),
+        borderColor: 'rgba(153, 102, 255, 1)',
+        backgroundColor: 'rgba(153, 102, 255, 0.2)',
+      },
+      {
+        label: 'Set 3 Weight',
+        data: records.map(record => record.set3Weight),
+        borderColor: 'rgba(255, 159, 64, 1)',
+        backgroundColor: 'rgba(255, 159, 64, 0.2)',
+      },
+      {
+        label: 'Set 4 Weight',
+        data: records.map(record => record.set4Weight),
+        borderColor: 'rgba(54, 162, 235, 1)',
+        backgroundColor: 'rgba(54, 162, 235, 0.2)',
+      }
+    ]
+  }
+
+  const generateRepsDatasets = (records) => {
+    return [
+      {
+        label: 'Set 1 Reps',
+        data: records.map(record => record.set1Reps),
+        borderColor: 'rgba(255, 99, 132, 1)',
+        backgroundColor: 'rgba(255, 99, 132, 0.2)',
+      },
+      {
+        label: 'Set 2 Reps',
+        data: records.map(record => record.set2Reps),
+        borderColor: 'rgba(54, 162, 235, 1)',
+        backgroundColor: 'rgba(54, 162, 235, 0.2)',
+      },
+      {
+        label: 'Set 3 Reps',
+        data: records.map(record => record.set3Reps),
+        borderColor: 'rgba(255, 206, 86, 1)',
+        backgroundColor: 'rgba(255, 206, 86, 0.2)',
+      },
+      {
+        label: 'Set 4 Reps',
+        data: records.map(record => record.set4Reps),
+        borderColor: 'rgba(75, 192, 192, 1)',
+        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+      }
+    ]
   }
 
   const handleUpdateOrCreate = () => {
@@ -57,7 +198,7 @@ const ExercisePage = () => {
           setToastColor('green')
           setTimeout(() => {
             setShowToast(false)
-          }, 2000);
+          }, 2000)
         }
         else {
           setToastText("an error occured while updating record")
@@ -65,7 +206,7 @@ const ExercisePage = () => {
           setToastColor('red')
           setTimeout(() => {
             setShowToast(false)
-          }, 2000);
+          }, 2000)
         }
         setShowModal(false)
       })
@@ -81,7 +222,7 @@ const ExercisePage = () => {
         setToastColor('green')
         setTimeout(() => {
           setShowToast(false)
-        }, 2000);
+        }, 2000)
       }
       else {
         setToastText("an error occured while creating record")
@@ -89,7 +230,7 @@ const ExercisePage = () => {
         setToastColor('red')
         setTimeout(() => {
           setShowToast(false)
-        }, 2000);
+        }, 2000)
       }
       setShowModal(false)
     })
@@ -123,7 +264,7 @@ const ExercisePage = () => {
     const year = today.getFullYear()
     const month = String(today.getMonth() + 1).padStart(2, '0')
     const day = String(today.getDate()).padStart(2, '0')
-    const date = `${year}-${month}-${day}`;
+    const date = `${year}-${month}-${day}`
     setModalData({
       exerciseId: exercise.id,
       date,
@@ -159,7 +300,7 @@ const ExercisePage = () => {
         setToastColor('green')
         setTimeout(() => {
           setShowToast(false)
-        }, 2000);
+        }, 2000)
       }
       else {
         setToastText("an error occured while deleting record")
@@ -167,7 +308,7 @@ const ExercisePage = () => {
         setToastColor('red')
         setTimeout(() => {
           setShowToast(false)
-        }, 2000);
+        }, 2000)
       }
     })
   }
@@ -305,7 +446,11 @@ const ExercisePage = () => {
           exercise !== null ? (
           <>
             <h1>{exercise?.name}</h1>
-            <div className="graph"></div>
+            <div className="graph">
+              {graphData && (
+                <Line data={graphData} options={graphOptions} />
+              )}
+            </div>
             <div className='menu'>
               <div className="graph-type">
                 <label>
